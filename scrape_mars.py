@@ -1,4 +1,6 @@
 
+# ## Mission to Mars
+
 # Dependencies
 import os
 from bs4 import BeautifulSoup as bs
@@ -7,36 +9,49 @@ from splinter import Browser
 from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 
-
 def scrape():
+    # ### NASA Mars News
+
+    # Setup splinter
+    executable_path = {'executable_path': ChromeDriverManager().install()}
+    browser = Browser('chrome', **executable_path, headless=False)
+
     # URL of page to be scraped
     url = 'https://mars.nasa.gov/news/?page=0&per_page=40&order=publish_date+desc%2Ccreated_at+desc&search=&category=19%2C165%2C184%2C204&blank_scope=Latest'
+    browser.visit(url)
 
-    # Retrieve page with the requests module
-    response = requests.get(url, verify=False)
-    print(response.text)
-
-    # Create BeautifulSoup object; parse with 'html.parser'
-    soup = bs(response.text, 'html.parser')
-
-    # Examine the results, then determine element that contains sought info
-    print(soup.prettify())
+    # Parsing HTML
+    nasa_html = browser.html
+    nasa_soup = bs(nasa_html, 'html.parser')
+    print(nasa_soup.prettify())
 
     # results are returned as an iterable list
-    results = soup.find_all("div", class_ = "slide")
+    results = nasa_soup.find_all("li", class_ = "slide")
     results
 
+    news_titles = []
+    news_descriptions = []
     for result in results:
         
         # Identify and return description of article
-        news_desc = result.find("div", class_ = "rollover_description_inner").text
+        news_desc = result.find("div", class_ = "article_teaser_body").text
             
         # Identify and return title of article
         news_title = result.find("div", class_ = "content_title").a.text
+        news_titles.append(news_title)
+        news_descriptions.append(news_desc)
         
         print("--------------------")
         print("Article Title: ", news_title)
         print("Description: ", news_desc)
+
+    # Latest news article info
+    latest_news_title = news_titles[0]
+    latest_news_desc = news_descriptions[0]
+    print(latest_news_title)
+    print(latest_news_desc)
+
+    browser.quit()
 
 
     # ### JPL Mars Space Images - Featured Image
@@ -85,11 +100,14 @@ def scrape():
     # What type is tables
     type(tables)
 
+    # Returning the first table
     df = tables[0]
     df
 
+    # Converting table to html
     html_table = df.to_html()
     html_table
+
 
     # ### Mars Hemispheres
 
@@ -132,13 +150,21 @@ def scrape():
         print(f'Title: {title}')
         print(f'Hemisphere Link: {hemis_url}')
         print(f'Image Link: {astro_img_href}')
- 
+
+    # Images url dictionaries
     hemisphere_image_urls
 
     browser.quit()
-    return 
+
+    # Store data in a dictionary
+    mars_data = {
+        "latest_news_title": latest_news_title,
+        "latest_news_desc": latest_news_desc,
+        "link": link,
+        "html_table": html_table,
+        "hemisphere_image_urls": hemisphere_image_urls
+    }
 
 
-
-
+    return mars_data
 
