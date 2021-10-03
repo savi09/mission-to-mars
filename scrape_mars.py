@@ -161,11 +161,6 @@ def scrape():
         "html_table": html_table
     }
 
-    data = {
-        "mars_data": mars_data,
-        "hemisphere_image_urls": hemisphere_image_urls
-    }
+    return [mars_data, hemisphere_image_urls]
 
-    return data
-    
 
