@@ -161,10 +161,9 @@ def scrape():
         "latest_news_title": latest_news_title,
         "latest_news_desc": latest_news_desc,
         "link": link,
-        "html_table": html_table,
-        "hemisphere_image_urls": hemisphere_image_urls
+        "html_table": html_table
     }
 
 
-    return mars_data
+    return mars_data, hemisphere_image_urls
 
