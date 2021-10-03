@@ -9,13 +9,15 @@ from splinter import Browser
 from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 
+def init_browser():
+    # @NOTE: Replace the path with your actual path to the chromedriver
+    executable_path = { "executable_path": ChromeDriverManager().install()}
+    return Browser("chrome", **executable_path, headless=False)
+
 def scrape():
     # ### NASA Mars News
-
-    # Setup splinter
-    executable_path = {'executable_path': ChromeDriverManager().install()}
-    browser = Browser('chrome', **executable_path, headless=False)
-
+    browser = init_browser()
+    
     # URL of page to be scraped
     url = 'https://mars.nasa.gov/news/?page=0&per_page=40&order=publish_date+desc%2Ccreated_at+desc&search=&category=19%2C165%2C184%2C204&blank_scope=Latest'
     browser.visit(url)
@@ -56,10 +58,7 @@ def scrape():
 
     # ### JPL Mars Space Images - Featured Image
 
-    # Setup splinter
-    executable_path = {'executable_path': ChromeDriverManager().install()}
-    browser = Browser('chrome', **executable_path, headless=False)
-
+    browser = init_browser()
 
     image_url = 'https://data-class-jpl-space.s3.amazonaws.com/JPL_Space/index.html'
     browser.visit(image_url)
@@ -90,6 +89,8 @@ def scrape():
 
     # ### Mars Facts
 
+    browser = init_browser()
+
     # URL for Mar's facts
     facts_url = 'https://space-facts.com/mars/'
 
@@ -110,10 +111,6 @@ def scrape():
 
 
     # ### Mars Hemispheres
-
-    # Setup splinter
-    executable_path = {'executable_path': ChromeDriverManager().install()}
-    browser = Browser('chrome', **executable_path, headless=False)
 
     astro_url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
     browser.visit(astro_url)
