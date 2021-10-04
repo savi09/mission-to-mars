@@ -16,8 +16,11 @@ def init_browser():
 
 def scrape():
     # ### NASA Mars News
-    browser = init_browser()
-    
+
+    # Setup splinter
+    executable_path = {'executable_path': ChromeDriverManager().install()}
+    browser = Browser('chrome', **executable_path, headless=False)
+
     # URL of page to be scraped
     url = 'https://mars.nasa.gov/news/?page=0&per_page=40&order=publish_date+desc%2Ccreated_at+desc&search=&category=19%2C165%2C184%2C204&blank_scope=Latest'
     browser.visit(url)
@@ -58,7 +61,10 @@ def scrape():
 
     # ### JPL Mars Space Images - Featured Image
 
-    browser = init_browser()
+    # Setup splinter
+    executable_path = {'executable_path': ChromeDriverManager().install()}
+    browser = Browser('chrome', **executable_path, headless=False)
+
 
     image_url = 'https://data-class-jpl-space.s3.amazonaws.com/JPL_Space/index.html'
     browser.visit(image_url)
@@ -89,8 +95,6 @@ def scrape():
 
     # ### Mars Facts
 
-    browser = init_browser()
-
     # URL for Mar's facts
     facts_url = 'https://space-facts.com/mars/'
 
@@ -112,13 +116,12 @@ def scrape():
 
     # ### Mars Hemispheres
 
+    # Setup splinter
+    executable_path = {'executable_path': ChromeDriverManager().install()}
+    browser = Browser('chrome', **executable_path, headless=False)
+
     astro_url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
     browser.visit(astro_url)
-
-    # Dependencies to fix an error below
-    # source: https://stackoverflow.com/questions/53052277/add-string-to-dictionary-without-quotes-in-python
-    import json
-    import ast
 
     # Parsing Astro HTML
     astro_html = browser.html 
@@ -137,11 +140,15 @@ def scrape():
         astro_img_soup = bs(astro_img_html, 'html.parser')
         containers = astro_img_soup.find_all('div', class_='downloads')
         
+        dic = {}
+        
         for container in containers: 
             link = container.find("a")
             astro_img_href = link["href"]
-        dic = '{"title": "' + title + '", "image_url": "' + astro_img_href + '"}'
-        hemisphere_image_urls.append(ast.literal_eval(dic))
+        dic["title"] = title
+        dic["image_url"] = astro_img_href
+        
+        hemisphere_image_urls.append(dic)
         
         print("----------")
         print(f'Title: {title}')

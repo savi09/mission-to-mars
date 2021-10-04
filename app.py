@@ -23,8 +23,8 @@ def scrape():
     links = mongo.db.links
     data = scrape_mars.scrape()
     mars.update({}, data[0], upsert=True)
-    mars.update({}, data[1], upsert=True)
-    return redirect("/", code=302)
+    links.update({}, data[1], upsert=True)
+    return redirect('/', code=302)
 
 
 if __name__ == "__main__":
