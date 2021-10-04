@@ -17,9 +17,7 @@ def init_browser():
 def scrape():
     # ### NASA Mars News
 
-    # Setup splinter
-    executable_path = {'executable_path': ChromeDriverManager().install()}
-    browser = Browser('chrome', **executable_path, headless=False)
+    browser = init_browser()
 
     # URL of page to be scraped
     url = 'https://mars.nasa.gov/news/?page=0&per_page=40&order=publish_date+desc%2Ccreated_at+desc&search=&category=19%2C165%2C184%2C204&blank_scope=Latest'
@@ -56,15 +54,10 @@ def scrape():
     print(latest_news_title)
     print(latest_news_desc)
 
-    browser.quit()
-
 
     # ### JPL Mars Space Images - Featured Image
 
-    # Setup splinter
-    executable_path = {'executable_path': ChromeDriverManager().install()}
-    browser = Browser('chrome', **executable_path, headless=False)
-
+    browser = init_browser()
 
     image_url = 'https://data-class-jpl-space.s3.amazonaws.com/JPL_Space/index.html'
     browser.visit(image_url)
@@ -88,10 +81,7 @@ def scrape():
 
     # Creating link
     link = f'{image_url}/{href}'
-    link
-
-    browser.quit()
-
+  
 
     # ### Mars Facts
 
@@ -116,9 +106,7 @@ def scrape():
 
     # ### Mars Hemispheres
 
-    # Setup splinter
-    executable_path = {'executable_path': ChromeDriverManager().install()}
-    browser = Browser('chrome', **executable_path, headless=False)
+    browser = init_browser()
 
     astro_url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
     browser.visit(astro_url)
